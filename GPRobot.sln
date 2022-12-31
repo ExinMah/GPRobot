@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPRobot", "GPRobot\GPRobot.vcxproj", "{022FD5A5-64BF-4FE8-911B-6F22D09652D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Debug|x64.ActiveCfg = Debug|x64
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Debug|x64.Build.0 = Debug|x64
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Debug|x86.ActiveCfg = Debug|Win32
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Debug|x86.Build.0 = Debug|Win32
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Release|x64.ActiveCfg = Release|x64
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Release|x64.Build.0 = Release|x64
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Release|x86.ActiveCfg = Release|Win32
+		{022FD5A5-64BF-4FE8-911B-6F22D09652D7}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FDABBDE-C5B6-4B38-9416-ECB2B7830DAA}
+	EndGlobalSection
+EndGlobal

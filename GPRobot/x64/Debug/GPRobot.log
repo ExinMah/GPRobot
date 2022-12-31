@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\Users\User\source\repos\GPRobot\GPRobot\main.cpp(167,63): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\User\source\repos\GPRobot\GPRobot\main.cpp(178,63): warning C4305: '+=': truncation from 'double' to 'float'
+  GPRobot.vcxproj -> C:\Users\User\source\repos\GPRobot\x64\Debug\GPRobot.exe
