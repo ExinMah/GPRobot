@@ -25,6 +25,9 @@
 float pTx = 0.0, pTy = 0.0, pTSpeed = 0.5;
 float pRy = 0.0, pRSpeed = 1.0;
 
+// Variables for rotation transformation
+float rx = 0, ry = 0, rz = 0, rSpeed = 0.0;
+
 // Varaibles for views (Orthographic and Perspective)
 bool isOrtho = true;
 double oNear = -10.0, oFar = 10.0;
@@ -53,6 +56,33 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		{
 		case VK_ESCAPE:
 			PostQuitMessage(0);
+			break;
+		case VK_UP:
+			rx = 0.0;
+			ry = 0.0;
+			rz = 1.0;
+			rSpeed = 0.03;
+			break;
+		case VK_DOWN:
+			rx = 0.0;
+			ry = 0.0;
+			rz = -1.0;
+			rSpeed = 0.03;
+			break;
+		case VK_LEFT:
+			rx = 0.0;
+			ry = -1.0;
+			rz = 0.0;
+			rSpeed = 0.03;
+			break;
+		case VK_RIGHT:
+			rx = 0.0;
+			ry = 1.0;
+			rz = 0.0;
+			rSpeed = 0.03;
+			break;
+		case VK_SPACE:
+			rSpeed = 0.0;
 			break;
 		default:
 			break;
@@ -452,31 +482,28 @@ void DrawFillCylinder(double baseRadius, double topRadius, double height)
 }
 
 // Draw Pyramid - Consolidate the texCoord again?
-void DrawLinePyramid(float size)
-{
+void DrawLinePyramid(float size, float height){
 	glLineWidth(5.0);
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(0.0f, 0.0f, size);
 	glVertex3f(size, 0.0f, size);
 	glVertex3f(size, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 
 	glVertex3f(0.0f, 0.0f, size);
-	glVertex3f(size / 2, size, size / 2);
-
+	glVertex3f(size / 2, height, size / 2);
 
 	glVertex3f(size, 0.0f, size);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 
 	glVertex3f(size, 0.0f, 0.0f);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glEnd();
 }
-void DrawFillPyramid(float size)
-{
+void DrawFillPyramid(float size, float height){
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 1);
 	glVertex3f(0.0f, 0.0f, size);
@@ -490,28 +517,28 @@ void DrawFillPyramid(float size)
 
 	glBegin(GL_TRIANGLES);
 	glTexCoord2f(0.5, 0.5);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 	glTexCoord2f(0, 1);
 	glVertex3f(0.0f, 0.0f, size);
 	glTexCoord2f(0, 0);
 	glVertex3f(0.0f, 0.0f, 0.0f);
 
 	glTexCoord2f(0.5, 0.5);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 	glTexCoord2f(1, 1);
 	glVertex3f(size, 0.0f, size);
 	glTexCoord2f(1, 0);
 	glVertex3f(size, 0.0f, 0.0f);
 
 	glTexCoord2f(0.5, 0.5);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 	glTexCoord2f(1, 0);
 	glVertex3f(size, 0.0f, 0.0f);
 	glTexCoord2f(0, 0);
 	glVertex3f(0.0f, 0.0f, 0.0f);
 
 	glTexCoord2f(0.5, 0.5);
-	glVertex3f(size / 2, size, size / 2);
+	glVertex3f(size / 2, height, size / 2);
 	glTexCoord2f(0, 0);
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glTexCoord2f(0, 1);
@@ -520,61 +547,111 @@ void DrawFillPyramid(float size)
 }
 
 //	Draw Prism
-void DrawLinePrism(float size)
-{
+void DrawLinePrism(float width, float height, float size){
 	glBegin(GL_LINE_LOOP);
-	glVertex3f(size / 2, 0, size / 2);
-	glVertex3f(size / 2, 0, -size / 2);
-	glVertex3f(-size / 2, 0, -size / 2);
-	glVertex3f(-size / 2, 0, size / 2);
+	glVertex3f(-width / 4, 0, size / 2);
+	glVertex3f(-width / 4, 0, -size / 2);
+	glVertex3f(-3 * width / 4, 0, -size / 2);
+	glVertex3f(-3 * width / 4, 0, size / 2);
 
-	glVertex3f(size / 2, 0, -size / 2);
-	glVertex3f(size / 2, size, -size / 2);
-	glVertex3f(-size / 2, size, -size / 2);
-	glVertex3f(-size / 2, 0, -size / 2);
+	glVertex3f(-width / 4, 0, -size / 2);
+	glVertex3f(-width / 4, height, -size / 2);
+	glVertex3f(-3 * width / 4, height, -size / 2);
+	glVertex3f(-3 * width / 4, 0, -size / 2);
 
-	glVertex3f(size / 2, size, -size / 2);
-	glVertex3f(-size / 2, size, -size / 2);
-	glVertex3f(-size / 2, 0, size / 2);
-	glVertex3f(size / 2, 0, size / 2);
+	glVertex3f(-width / 4, height, -size / 2);
+	glVertex3f(-3 * width / 4, height, -size / 2);
+	glVertex3f(-3 * width / 4, 0, size / 2);
+	glVertex3f(-width / 4, 0, size / 2);
 
-	glVertex3f(size / 2, 0, size / 2);
-	glVertex3f(size / 2, size, -size / 2);
-	glVertex3f(size / 2, 0, -size / 2);
+	glVertex3f(-width / 4, 0, size / 2);
+	glVertex3f(-width / 4, height, -size / 2);
+	glVertex3f(-width / 4, 0, -size / 2);
 
-	glVertex3f(-size / 2, 0, size / 2);
-	glVertex3f(-size / 2, size, -size / 2);
-	glVertex3f(-size / 2, 0, -size / 2);
+	glVertex3f(-3 * width / 4, 0, size / 2);
+	glVertex3f(-3 * width / 4, height, -size / 2);
+	glVertex3f(-3 * width / 4, 0, -size / 2);
 	glEnd();
 }
-
-void DrawFillPrism(float size)
-{
+void DrawFillPrism(float width, float height, float size){
 	glBegin(GL_QUADS);
-	glVertex3f(size / 2, 0, size / 2);
-	glVertex3f(size / 2, 0, -size / 2);
-	glVertex3f(-size / 2, 0, -size / 2);
-	glVertex3f(-size / 2, 0, size / 2);
+	glVertex3f(width / 2, 0, size / 2);
+	glVertex3f(width / 2, 0, -size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
+	glVertex3f(-width / 2, 0, size / 2);
 
-	glVertex3f(size / 2, 0, -size / 2);
-	glVertex3f(size / 2, size, -size / 2);
-	glVertex3f(-size / 2, size, -size / 2);
-	glVertex3f(-size / 2, 0, -size / 2);
+	glVertex3f(width / 2, 0, -size / 2);
+	glVertex3f(width / 2, height, -size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
 
-	glVertex3f(size / 2, size, -size / 2);
-	glVertex3f(-size / 2, size, -size / 2);
-	glVertex3f(-size / 2, 0, size / 2);
-	glVertex3f(size / 2, 0, size / 2);
+	glVertex3f(width / 2, height, -size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(width / 2, 0, size / 2);
 	glEnd();
 
 	glBegin(GL_TRIANGLES);
-	glVertex3f(size / 2, 0, size / 2);
-	glVertex3f(size / 2, size, -size / 2);
-	glVertex3f(size / 2, 0, -size / 2);
+	glVertex3f(width / 2, 0, size / 2);
+	glVertex3f(width / 2, height, -size / 2);
+	glVertex3f(width / 2, 0, -size / 2);
 
-	glVertex3f(-size / 2, 0, size / 2);
-	glVertex3f(-size / 2, size, -size / 2);
-	glVertex3f(-size / 2, 0, -size / 2);
+	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
+	glEnd();
+}
+void DrawFillLeftHalfPrism(float width, float height, float size)
+{
+	glBegin(GL_QUADS);
+	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
+	glVertex3f(0, 0, -size / 2);
+	glVertex3f(0, 0, size / 2);
+
+	glVertex3f(-width / 2, 0, -size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(0, height, -size / 2);
+	glVertex3f(0, 0, -size / 2);
+
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(0, height, -size / 2);
+	glVertex3f(0, 0, size / 2);
+	glVertex3f(-width / 2, 0, size / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
+
+	glVertex3f(0, 0, size / 2);
+	glVertex3f(0, height, -size / 2);
+	glVertex3f(0, 0, -size / 2);
+	glEnd();
+}
+void DrawFillRightHalfPrism(float width, float height, float size){
+	glBegin(GL_QUADS);
+	glVertex3f(width / 2, 0, size / 2);
+	glVertex3f(width / 2, 0, -size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
+	glVertex3f(-width / 2, 0, size / 2);
+
+	glVertex3f(width / 2, 0, -size / 2);
+	glVertex3f(width / 2, height, -size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(-width / 2, 0, -size / 2);
+
+	glVertex3f(width / 2, height, -size / 2);
+	glVertex3f(-width / 2, height, -size / 2);
+	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(width / 2, 0, size / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(width / 2, 0, size / 2);
+	glVertex3f(width / 2, height, -size / 2);
+	glVertex3f(width / 2, 0, -size / 2);
 	glEnd();
 }
 
@@ -586,20 +663,30 @@ void DrawFillPrism(float size)
 
 void RobotHead()
 {
+	//	Jaw
+	glPushMatrix();
+	glColor3f(1.0,0.0,0.0);
+	DrawFillPyramid(0.3,-0.15);
+	glPopMatrix();
+
 	//	Face
 	glPushMatrix();
-	glRotatef(-180, 1, 0, 0);
-	glScalef(1, 0.5, 1);
-	DrawFillPyramid(1.0);
+	glColor3f(0.0,0.0,1.0);
+	DrawFillCube(0.3);
 	glPopMatrix();
 
+	//	Hair
 	glPushMatrix();
-	DrawFillCube(1);
+	glColor3f(0.0,1.0,1.0);
+	DrawFillPrism(0.15, 0.4, 0.3);
 	glPopMatrix();
 
-	glTranslatef(1.0, 1.0, 1.0);
+	//	Neck
 	glPushMatrix();
-	DrawFillPrism(1);
+	glTranslatef(0.15, 0.0, 0.05);
+	glColor3f(0.0,1.0,0.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	DrawFillCylinder(0.05,0.05,0.2);
 	glPopMatrix();
 }
 
@@ -632,9 +719,13 @@ void Display()
 	glClearColor(0, 0, 0, 0);
 	glEnable(GL_DEPTH_TEST);
 
-	Projection();
+	// Projection();
 
+	//	Transformation
+	glRotatef(rSpeed, rx, ry,rz);
+	
 	// Draw Robot Here
+	// RobotHead();
 	RobotHead();
 	RobotBody();
 	RobotArm();
