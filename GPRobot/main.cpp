@@ -57,29 +57,23 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		case VK_ESCAPE:
 			PostQuitMessage(0);
 			break;
-		case VK_UP:
-			rx = 0.0;
+		case 0x58:
+			rx = -1.0;
 			ry = 0.0;
-			rz = 1.0;
-			rSpeed = 0.03;
+			rz = 0.0;
+			rSpeed = 0.05;
 			break;
-		case VK_DOWN:
-			rx = 0.0;
-			ry = 0.0;
-			rz = -1.0;
-			rSpeed = 0.03;
-			break;
-		case VK_LEFT:
+		case 0x59:
 			rx = 0.0;
 			ry = -1.0;
 			rz = 0.0;
-			rSpeed = 0.03;
+			rSpeed = 0.05;
 			break;
-		case VK_RIGHT:
+		case 0x5A:
 			rx = 0.0;
-			ry = 1.0;
-			rz = 0.0;
-			rSpeed = 0.03;
+			ry = 0.0;
+			rz = 1.0;
+			rSpeed = 0.05;
 			break;
 		case VK_SPACE:
 			rSpeed = 0.0;
@@ -372,8 +366,7 @@ void DrawFullCube(float size)
 	glVertex3f(0.0f, size, 0.0f);
 	glEnd();
 }
-void DrawFillCube(float size)
-{
+void DrawFillCube(float size){
 	glBegin(GL_QUADS);
 	// Face 1 : Bottom face
 	glTexCoord2f(0, 1);
@@ -424,6 +417,69 @@ void DrawFillCube(float size)
 	glVertex3f(0.0f, size, 0.0f);
 	glTexCoord2f(0, 0);
 	glVertex3f(size, size, 0.0f);
+
+	// Face 6 : Back Face
+	glTexCoord2f(0, 1);
+	glVertex3f(size, size, 0.0f);
+	glTexCoord2f(1, 1);
+	glVertex3f(size, 0.0f, 0.0f);
+	glTexCoord2f(1, 0);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(0, 0);
+	glVertex3f(0.0f, size, 0.0f);
+	glEnd();
+}
+void DrawAdjustableFillCube(float width, float height, float size){
+	glBegin(GL_QUADS);
+	// Face 1 : Bottom face
+	glTexCoord2f(0, 1);
+	glVertex3f(0.0f, 0.0f, size);
+	glTexCoord2f(1, 1);
+	glVertex3f(size, 0.0f, size);
+	glTexCoord2f(1, 0);
+	glVertex3f(size, 0.0f, 0.0f);
+	glTexCoord2f(0, 0);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+
+	// Face 2 : Left Face
+	glTexCoord2f(0, 1);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(1, 1);
+	glVertex3f(0.0f, size, 0.0f);
+	glTexCoord2f(1, 0);
+	glVertex3f(0.0f, size, size);
+	glTexCoord2f(0, 0);
+	glVertex3f(0.0f, 0.0f, size);
+
+	// Face 3 : Front Face
+	glTexCoord2f(0, 1);
+	glVertex3f(0.0f, 0.0f, size);
+	glTexCoord2f(1, 1);
+	glVertex3f(0.0f, size, size);
+	glTexCoord2f(1, 0);
+	glVertex3f(size, size, size);
+	glTexCoord2f(0, 0);
+	glVertex3f(size, 0.0f, size);
+
+	// Face 4 : Right Face
+	glTexCoord2f(0, 1);
+	glVertex3f(size, 0.0f, size);
+	glTexCoord2f(1, 1);
+	glVertex3f(size, 0.0f, 0.0f);
+	glTexCoord2f(1, 0);
+	glVertex3f(size, size, 0.0f);
+	glTexCoord2f(0, 0);
+	glVertex3f(size, size, size);
+
+	// Face 5 : Top Face
+	glTexCoord2f(0, 1);
+	glVertex3f(width, height, size);
+	glTexCoord2f(1, 1);
+	glVertex3f(0.0f, height, size);
+	glTexCoord2f(1, 0);
+	glVertex3f(0.0f, height, 0.0f);
+	glTexCoord2f(0, 0);
+	glVertex3f(width, height, 0.0f);
 
 	// Face 6 : Back Face
 	glTexCoord2f(0, 1);
@@ -634,17 +690,17 @@ void DrawFillRightHalfPrism(float width, float height, float size){
 	glBegin(GL_QUADS);
 	glVertex3f(width / 2, 0, size / 2);
 	glVertex3f(width / 2, 0, -size / 2);
-	glVertex3f(-width / 2, 0, -size / 2);
-	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(0, 0, -size / 2);
+	glVertex3f(0, 0, size / 2);
 
 	glVertex3f(width / 2, 0, -size / 2);
 	glVertex3f(width / 2, height, -size / 2);
-	glVertex3f(-width / 2, height, -size / 2);
-	glVertex3f(-width / 2, 0, -size / 2);
+	glVertex3f(0, height, -size / 2);
+	glVertex3f(0, 0, -size / 2);
 
 	glVertex3f(width / 2, height, -size / 2);
-	glVertex3f(-width / 2, height, -size / 2);
-	glVertex3f(-width / 2, 0, size / 2);
+	glVertex3f(0, height, -size / 2);
+	glVertex3f(0, 0, size / 2);
 	glVertex3f(width / 2, 0, size / 2);
 	glEnd();
 
@@ -652,6 +708,10 @@ void DrawFillRightHalfPrism(float width, float height, float size){
 	glVertex3f(width / 2, 0, size / 2);
 	glVertex3f(width / 2, height, -size / 2);
 	glVertex3f(width / 2, 0, -size / 2);
+
+	glVertex3f(0, 0, size / 2);
+	glVertex3f(0, height, -size / 2);
+	glVertex3f(0, 0, -size / 2);
 	glEnd();
 }
 
@@ -676,14 +736,62 @@ void RobotHead()
 	glPopMatrix();
 
 	//	Hair
+	//------------------Left side------------------//
 	glPushMatrix();
-	glColor3f(0.0,1.0,1.0);
-	DrawFillPrism(0.15, 0.4, 0.3);
+	glColor3f(0.0, 1.0, 1.0);
+	glTranslatef(-0.05, 0.0, 0.0);
+	glRotatef(-90, 0.0, 1.0, 0.0);
+	glTranslatef(0.05, 0.3, 0.0);
+	DrawFillPrism(-0.15, -0.45, 0.1);
+	glPopMatrix();
+	
+	//------------------Right side------------------//
+	glPushMatrix();
+	glColor3f(0.0, 1.0, 1.0);
+	glTranslatef(0.35, 0.0, 0.0);
+	glRotatef(90, 0.0, 1.0, 0.0);
+	glTranslatef(-0.05, 0.3, 0.0);
+	DrawFillPrism(-0.15, -0.45, 0.1);
 	glPopMatrix();
 
+	//------------------Left Bangs------------------//
+	glPushMatrix();
+	glColor3f(1.0, 0.0, 1.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	glRotatef(90, 0.0, 0.0, 1.0);
+	glTranslatef(0.0, 0.0, -0.25);
+	DrawFillLeftHalfPrism(0.05, -0.15, 0.1);
+	glPopMatrix();
+	
+	//------------------Right Bangs------------------//
+	glPushMatrix();
+	glColor3f(1.0, 0.0, 1.0);
+	glTranslatef(0.3, 0.0, 0.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	glRotatef(-90, 0.0, 0.0, 1.0);
+	glTranslatef(0.0, 0.0, -0.25);
+	DrawFillRightHalfPrism(0.05, -0.15, 0.1);
+	glPopMatrix();
+
+	//------------------Top Hair------------------//
+	glPushMatrix();
+	glColor3f(0.5,0.0,0.0);
+	glTranslatef(0.0, 0.30, 0.0);
+	glTranslatef(0.0, 0.0, -0.05);
+	glTranslatef(-0.1, 0.0, 0.0);
+	DrawFillPyramid(0.5,0.15);
+	glPopMatrix();
+
+	//------------------Back Hair------------------//
+	glPushMatrix();
+	glColor3f(0.0,0.5,0.0);
+	glTranslatef(0.0, 0.0, 0.3);
+	DrawAdjustableFillCube(0.1,0.3,0.3);
+	glPopMatrix();
+	
 	//	Neck
 	glPushMatrix();
-	glTranslatef(0.15, 0.0, 0.05);
+	glTranslatef(0.15, 0.0, 0.25);
 	glColor3f(0.0,1.0,0.0);
 	glRotatef(90, 1.0, 0.0, 0.0);
 	DrawFillCylinder(0.05,0.05,0.2);
