@@ -519,6 +519,65 @@ void DrawFillPyramid(float size)
 	glEnd();
 }
 
+//	Draw Prism
+void DrawLinePrism(float size)
+{
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(size / 2, 0, size / 2);
+	glVertex3f(size / 2, 0, -size / 2);
+	glVertex3f(-size / 2, 0, -size / 2);
+	glVertex3f(-size / 2, 0, size / 2);
+
+	glVertex3f(size / 2, 0, -size / 2);
+	glVertex3f(size / 2, size, -size / 2);
+	glVertex3f(-size / 2, size, -size / 2);
+	glVertex3f(-size / 2, 0, -size / 2);
+
+	glVertex3f(size / 2, size, -size / 2);
+	glVertex3f(-size / 2, size, -size / 2);
+	glVertex3f(-size / 2, 0, size / 2);
+	glVertex3f(size / 2, 0, size / 2);
+
+	glVertex3f(size / 2, 0, size / 2);
+	glVertex3f(size / 2, size, -size / 2);
+	glVertex3f(size / 2, 0, -size / 2);
+
+	glVertex3f(-size / 2, 0, size / 2);
+	glVertex3f(-size / 2, size, -size / 2);
+	glVertex3f(-size / 2, 0, -size / 2);
+	glEnd();
+}
+
+void DrawFillPrism(float size)
+{
+	glBegin(GL_QUADS);
+	glVertex3f(size / 2, 0, size / 2);
+	glVertex3f(size / 2, 0, -size / 2);
+	glVertex3f(-size / 2, 0, -size / 2);
+	glVertex3f(-size / 2, 0, size / 2);
+
+	glVertex3f(size / 2, 0, -size / 2);
+	glVertex3f(size / 2, size, -size / 2);
+	glVertex3f(-size / 2, size, -size / 2);
+	glVertex3f(-size / 2, 0, -size / 2);
+
+	glVertex3f(size / 2, size, -size / 2);
+	glVertex3f(-size / 2, size, -size / 2);
+	glVertex3f(-size / 2, 0, size / 2);
+	glVertex3f(size / 2, 0, size / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(size / 2, 0, size / 2);
+	glVertex3f(size / 2, size, -size / 2);
+	glVertex3f(size / 2, 0, -size / 2);
+
+	glVertex3f(-size / 2, 0, size / 2);
+	glVertex3f(-size / 2, size, -size / 2);
+	glVertex3f(-size / 2, 0, -size / 2);
+	glEnd();
+}
+
 /*
  * --------------------------------------------------------------------
  *							Robot Parts
@@ -527,7 +586,21 @@ void DrawFillPyramid(float size)
 
 void RobotHead()
 {
+	//	Face
+	glPushMatrix();
+	glRotatef(-180, 1, 0, 0);
+	glScalef(1, 0.5, 1);
+	DrawFillPyramid(1.0);
+	glPopMatrix();
 
+	glPushMatrix();
+	DrawFillCube(1);
+	glPopMatrix();
+
+	glTranslatef(1.0, 1.0, 1.0);
+	glPushMatrix();
+	DrawFillPrism(1);
+	glPopMatrix();
 }
 
 void RobotBody()
