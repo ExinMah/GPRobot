@@ -429,7 +429,8 @@ void DrawFillCube(float size){
 	glVertex3f(0.0f, size, 0.0f);
 	glEnd();
 }
-void DrawAdjustableFillCube(float width, float height, float size){
+void DrawAdjustableFillCube(float width, float height, float size)
+{
 	glBegin(GL_QUADS);
 	// Face 1 : Bottom face
 	glTexCoord2f(0, 1);
@@ -714,6 +715,44 @@ void DrawFillRightHalfPrism(float width, float height, float size){
 	glVertex3f(0, 0, -size / 2);
 	glEnd();
 }
+void DrawAdjustableFillRectangularPrism(float width, float height, float size){
+	glBegin(GL_QUADS);
+	// Face 1 : Bottom face
+	glVertex3f(0.0f, 0.0f, size);
+	glVertex3f(width, 0.0f, size);
+	glVertex3f(width, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+
+	// Face 2 : Left Face
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, height, 0.0f);
+	glVertex3f(0.0f, height, size);
+	glVertex3f(0.0f, 0.0f, size);
+
+	// Face 3 : Front Face
+	glVertex3f(0.0f, 0.0f, size);
+	glVertex3f(0.0f, height, size);
+	glVertex3f(width, height, size);
+	glVertex3f(width, 0.0f, size);
+
+	// Face 4 : Right Face
+	glVertex3f(width, 0.0f, size);
+	glVertex3f(width, 0.0f, 0.0f);
+	glVertex3f(width, height, 0.0f);
+	glVertex3f(width, height, size);
+
+	// Face 5 : Top Face
+	glVertex3f(width, height, size);
+	glVertex3f(0.0f, height, size);
+	glVertex3f(0.0f, height, 0.0f);
+	glVertex3f(width, height, 0.0f);
+
+	// Face 6 : Back Face
+	glVertex3f(width, height, 0.0f);
+	glVertex3f(width, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, height, 0.0f);
+}
 
 /*
  * --------------------------------------------------------------------
@@ -726,7 +765,7 @@ void RobotHead()
 	//	Jaw
 	glPushMatrix();
 	glColor3f(1.0,0.0,0.0);
-	DrawFillPyramid(0.3,-0.15);
+	DrawFillPyramid(0.3,-0.1);
 	glPopMatrix();
 
 	//	Face
@@ -735,23 +774,57 @@ void RobotHead()
 	DrawFillCube(0.3);
 	glPopMatrix();
 
+	//------------------Left Eye------------------//
+	glPushMatrix();
+	glColor3f(1.0,0.0,0.0);
+	glTranslatef(0.06, 0.17, 0.0);
+	DrawFillSphere(0.05);
+	glPopMatrix();
+
+	//------------------Right Eye------------------//
+	glPushMatrix();
+	glColor3f(1.0,0.0,0.0);
+	glTranslatef(0.24, 0.17, 0.0);
+	DrawFillSphere(0.05);
+	glPopMatrix();
+	
 	//	Hair
-	//------------------Left side------------------//
+	//------------------Left side hair piece------------------//
 	glPushMatrix();
 	glColor3f(0.0, 1.0, 1.0);
 	glTranslatef(-0.05, 0.0, 0.0);
 	glRotatef(-90, 0.0, 1.0, 0.0);
 	glTranslatef(0.05, 0.3, 0.0);
-	DrawFillPrism(-0.15, -0.45, 0.1);
+	DrawFillPrism(-0.15, -0.4, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.0,0.5,0.0);
+	glTranslatef(0.45, 0.0, 0.0);
+	glTranslatef(0.0, 0.1, 0.0);
+	glRotatef(90, 0.0,1.0,0.0);
+	glTranslatef(0.01, 0.0, 0.0);
+	glRotatef(45, 1.0,0.0,0.0);
+	DrawFillLeftHalfPrism(0.2, 0.1, 0.4);
 	glPopMatrix();
 	
-	//------------------Right side------------------//
+	//------------------Right side hair piece------------------//
 	glPushMatrix();
 	glColor3f(0.0, 1.0, 1.0);
 	glTranslatef(0.35, 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
 	glTranslatef(-0.05, 0.3, 0.0);
-	DrawFillPrism(-0.15, -0.45, 0.1);
+	DrawFillPrism(-0.15, -0.4, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.0,0.5,0.0);
+	glTranslatef(-0.15, 0.0, 0.0);
+	glTranslatef(0.0, 0.1, 0.0);
+	glRotatef(-90, 0.0,1.0,0.0);
+	glTranslatef(0.08, 0.0, 0.0);
+	glRotatef(45, 1.0,0.0,0.0);
+	DrawFillLeftHalfPrism(0.2, 0.1, 0.4);
 	glPopMatrix();
 
 	//------------------Left Bangs------------------//
@@ -776,23 +849,62 @@ void RobotHead()
 	//------------------Top Hair------------------//
 	glPushMatrix();
 	glColor3f(0.5,0.0,0.0);
-	glTranslatef(0.0, 0.30, 0.0);
+	glTranslatef(0.0, 0.3001, 0.0);
 	glTranslatef(0.0, 0.0, -0.05);
 	glTranslatef(-0.1, 0.0, 0.0);
 	DrawFillPyramid(0.5,0.15);
 	glPopMatrix();
 
-	//------------------Back Hair------------------//
+	//------------------Hairband------------------//
+	//	Left
 	glPushMatrix();
-	glColor3f(0.0,0.5,0.0);
-	glTranslatef(0.0, 0.0, 0.3);
-	DrawAdjustableFillCube(0.1,0.3,0.3);
+	glColor3f(0.0,0.3,0.5);
+	glTranslatef(0.0,0.35, 0.0);
+	glTranslatef(0.0,0.0, 0.2);
+	glTranslatef(-0.06,0.0, 0.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	DrawFillLeftHalfPrism(0.05, 0.15,0.15);
 	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.0,0.3,0.5);
+	glTranslatef(0.0,0.35, 0.0);
+	glTranslatef(0.0,0.0, 0.25);
+	glTranslatef(-0.07,0.0, 0.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	DrawFillLeftHalfPrism(-0.05, -0.15,-0.15);
+	glPopMatrix();
+	
+	//	Right
+	glPushMatrix();
+	glColor3f(0.0,0.3,0.5);
+	glTranslatef(0.0,0.35, 0.0);
+	glTranslatef(0.0,0.0, 0.2);
+	glTranslatef(-0.06,0.0, 0.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	DrawFillLeftHalfPrism(0.05, 0.15,0.15);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.0,0.3,0.5);
+	glTranslatef(0.0,0.35, 0.0);
+	glTranslatef(0.0,0.0, 0.25);
+	glTranslatef(-0.07,0.0, 0.0);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	DrawFillLeftHalfPrism(-0.05, -0.15,-0.15);
+	glPopMatrix();
+
+	//------------------Back Hair------------------//
+	// glPushMatrix();
+	// glColor3f(0.0,0.0,0.5);
+	// glTranslatef(0.3,0.2, 0.15);
+	// DrawFillCube(0.1);
+	// glPopMatrix();
 	
 	//	Neck
 	glPushMatrix();
-	glTranslatef(0.15, 0.0, 0.25);
 	glColor3f(0.0,1.0,0.0);
+	glTranslatef(0.15, 0.0, 0.25);
 	glRotatef(90, 1.0, 0.0, 0.0);
 	DrawFillCylinder(0.05,0.05,0.2);
 	glPopMatrix();
