@@ -912,7 +912,143 @@ void RobotHead()
 
 void RobotBody()
 {
+	//glPushMatrix();
+	//glScalef(0.2, 0.2, 0.2);
+	//glTranslatef(1, -6, 0);
+	// Body Base
+	glPushMatrix();
+	glScalef(1.0f, 1.75f, 0.25f);
+	glTranslatef(-2.0f, -1.0f, 0.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	DrawFillCube(4.0f);
+	glPopMatrix();
+
+	// Chest Area
+	glPushMatrix();
+		glTranslatef(0, 2, 0);
+
+		glPushMatrix();
+			glTranslatef(1, 0, -1);
+
+			// Right
+			glPushMatrix();
+				glColor3f(0.0, 0.0, 1.0f);
+				glTranslatef(0, 2.0, 2.0f);
+				//glRotatef(180, 0, 0, 1);
+				glRotatef(90, 1, 0, 0);
+				DrawFillPrism(2.0f, 1.0f, 1.0f);
+			glPopMatrix();
+
+			glPushMatrix();
+				glColor3f(1, 0, 0);
+				glTranslatef(0, 2.5, 2.5);
+				glRotatef(180, 0, 0, 1);
+				DrawFillPrism(2.0f, -1.0f, 1.0f);
+			glPopMatrix();
+
+		glPopMatrix();
+
+		// Left
+		glPushMatrix();
+			glTranslatef(-1, 0, -1);
+
+			glPushMatrix();
+				glColor3f(1.0, 1.0, 0.0f);
+				glTranslatef(0, 2.0, 2.0f);
+				//glRotatef(180, 0, 0, 1);
+				glRotatef(90, 1, 0, 0);
+				DrawFillPrism(2.0f, 1.0f, 1.0f);
+			glPopMatrix();
+
+			glPushMatrix();
+				glColor3f(1, 1, 0);
+				glTranslatef(0, 2.5, 2.5);
+				glRotatef(180, 0, 0, 1);
+				DrawFillPrism(2.0f, -1.0f, 1.0f);
+			glPopMatrix();
+		glPopMatrix();
+
+	glPopMatrix();
+
+	// That Miku belt thing
 	
+	// Front
+	// Bottom
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(0, 0, 1);
+	glRotatef(15, 0, 0, 1);
+	glScalef(4.5, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(-2.1, 0.5, 1);
+	glRotatef(-15, 0, 0, 1);
+	glScalef(4.1, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	// Top
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(0, 0.75, 1);
+	glRotatef(15, 0, 0, 1);
+	glScalef(4.5, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(-2.1, 1.15, 1);
+	glRotatef(-15, 0, 0, 1);
+	glScalef(4.1, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	// Left
+	// Bottom
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(0, 0, 1);
+	glRotatef(15, 0, 0, 1);
+	glScalef(4.5, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(-2.1, 0.5, 1);
+	glRotatef(-15, 0, 0, 1);
+	glScalef(4.1, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	// Top
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(0, 0.75, 1);
+	glRotatef(15, 0, 0, 1);
+	glScalef(4.5, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(1, 0, 1);
+	glTranslatef(-2.1, 1.15, 1);
+	glRotatef(-15, 0, 0, 1);
+	glScalef(4.1, 1, 1);
+	DrawFillCube(0.5f);
+	glPopMatrix();
+
+	// Hip Base
+	glPushMatrix();
+	glColor3f(0, 1, 1);
+	glTranslatef(-2.5, -2.0, -0.3);
+	glScalef(2.5, 1, 0.7);
+	DrawFillCube(2.0f);
+	glPopMatrix();
 }
 
 void RobotArm()
@@ -945,7 +1081,6 @@ void Display()
 	glRotatef(rSpeed, rx, ry,rz);
 	
 	// Draw Robot Here
-	// RobotHead();
 	RobotHead();
 	RobotBody();
 	RobotArm();
