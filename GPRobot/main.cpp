@@ -12,6 +12,65 @@
 
 #define WINDOW_TITLE "Graphics Programming Robot Assignment"
 
+// Define Virtual Keycodes
+#define VK_KEY_A 0x41
+#define VK_KEY_B 0x42
+#define VK_KEY_C 0x43
+#define VK_KEY_D 0x44
+#define VK_KEY_E 0x45
+#define VK_KEY_F 0x46
+#define VK_KEY_G 0x47
+#define VK_KEY_H 0x48
+#define VK_KEY_I 0x49
+#define VK_KEY_J 0x4A
+#define VK_KEY_K 0x4B
+#define VK_KEY_L 0x4C
+#define VK_KEY_M 0x4D
+#define VK_KEY_N 0x4E
+#define VK_KEY_O 0x4F
+#define VK_KEY_P 0x50
+#define VK_KEY_Q 0x51
+#define VK_KEY_R 0x52
+#define VK_KEY_S 0x53
+#define VK_KEY_T 0x54
+#define VK_KEY_U 0x55
+#define VK_KEY_V 0x56
+#define VK_KEY_W 0x57
+#define VK_KEY_X 0x58
+#define VK_KEY_Y 0x59
+#define VK_KEY_Z 0x5A
+
+#define VK_KEY_0 0x30
+#define VK_KEY_1 0x31
+#define VK_KEY_2 0x32
+#define VK_KEY_3 0x33
+#define VK_KEY_4 0x34
+#define VK_KEY_5 0x35
+#define VK_KEY_6 0x36
+#define VK_KEY_7 0x37
+#define VK_KEY_8 0x38
+#define VK_KEY_9 0x39
+
+#define VK_KEY_SPACE 0x20
+#define VK_KEY_ESCAPE 0x1B
+
+#define VK_KEY_UP 0x26
+#define VK_KEY_DOWN 0x28
+#define VK_KEY_LEFT 0x25
+#define VK_KEY_RIGHT 0x27
+
+#define VK_KEY_F1 0x70
+#define VK_KEY_F2 0x71
+#define VK_KEY_F3 0x72
+#define VK_KEY_F4 0x73
+#define VK_KEY_F5 0x74
+#define VK_KEY_F6 0x75
+#define VK_KEY_F7 0x76
+#define VK_KEY_F8 0x77
+#define VK_KEY_F9 0x78
+#define VK_KEY_F10 0x79
+#define VK_KEY_F11 0x7A
+#define VK_KEY_F12 0x7B
 
 /*
  * --------------------------------------------------------------------
@@ -24,8 +83,8 @@
 
 /********************** PROJECTION **********************/
 // Variables for projection transformation
-float pTx = 0.0, pTy = 0.0, pTSpeed = 0.5;
-float pRy = 0.0, pRSpeed = 1.0;
+float Ptx = 0.0 , Pty = 0.0 , PtSpeed = 1.0;
+float Pry =0.0 , PrSpeed=1.0;
 
 // Variables for rotation transformation
 float rx = 0, ry = 0, rz = 0, rSpeed = 0.0;
@@ -40,14 +99,24 @@ float difM[3] = { 1.0, 0.0, 0.0 };	//	Red color Dif material
 bool isLightOn = false;				//	is Light on?
 
 // Variables for views (Orthographic and Perspective)
-bool isOrtho = true;
-double oNear = -10.0, oFar = 10.0;
-double pNear = 1.0, pFar = 20.0;
+bool isOrtho = false;
+double ONear = -10.0, OFar = 10.0;
+double PNear = 1.0, PFar = 20.0;
+float tx = 0.0, ty = 0.0, tz = 0.0, tSpeed = 1.0;
+float rS = 0.0;
 
 /********************** TEXTURE **********************/
 // Variables for texture bitmap
 BITMAP bmp;
 HBITMAP hBmp = NULL;
+GLuint texArr[10];
+int tex;
+
+/********************** ANIMATION **********************/
+//	Weapon pickup
+bool gunOn = false;
+bool swordOn = false;
+
 
 /*
  * --------------------------------------------------------------------
@@ -65,51 +134,118 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		case WM_KEYDOWN:
 			switch (wParam)
 			{
-		case VK_ESCAPE:
-			PostQuitMessage(0);
-				break;
-		case 0x58:
-			rx = -1.0;
-				ry = 0.0;
-				rz = 0.0;
-				rSpeed = 0.05;
-				break;
-		case 0x59:
-			rx = 0.0;
-				ry = -1.0;
-				rz = 0.0;
-				rSpeed = 0.05;
-				break;
-		case 0x5A:
-			rx = 0.0;
-				ry = 0.0;
-				rz = 1.0;
-				rSpeed = 0.05;
-				break;
-		case VK_SPACE:
-			isLightOn = !isLightOn;
-				rSpeed = 0.0;
-				break;
-		case 'W':
-			posD[1] += 0.5;
-				break;
-		case 'A':
-			posD[2] += 0.5;
-				break;
-		case 'S':
-			posD[1] -= 0.5;
-				break;
-		case 'D':
-			posD[2] -= 0.5;
-				break;
-		case 'E':
-			posD[3] -= 0.5;
-				break;
-		case 'Q':
-			posD[3] += 0.5;
-				break;
-		default:
-			break;
+				case VK_ESCAPE:
+					PostQuitMessage(0);
+						break;
+				case VK_KEY_X:
+					rx = -1.0;
+					ry = 0.0;
+					rz = 0.0;
+					rSpeed = 0.15;
+					break;
+				case VK_KEY_Y:
+					rx = 0.0;
+					ry = -1.0;
+					rz = 0.0;
+					rSpeed = 0.15;
+					break;
+				case VK_KEY_Z:
+					rx = 0.0;
+					ry = 0.0;
+					rz = -1.0;
+					rSpeed = 0.15;
+					break;
+				case VK_SPACE:
+					rSpeed = 0.0;
+					break;
+				case VK_SHIFT:
+					isLightOn = !isLightOn;
+					break;
+				case VK_KEY_W:
+					posD[1] += 0.5;
+					break;
+				case VK_KEY_A:
+					posD[2] += 0.5;
+					break;
+				case VK_KEY_S:
+					posD[1] -= 0.5;
+					break;
+				case VK_KEY_D:
+					posD[2] -= 0.5;
+					break;
+				case VK_KEY_E:
+					posD[3] -= 0.5;
+					break;
+				case VK_KEY_Q:
+					posD[3] += 0.5;
+					break;
+				case VK_KEY_UP:
+					if (isOrtho){
+						if (tz > ONear)
+							tz -= tSpeed;
+					}
+					else {
+						if (tz > ONear)
+							tz -= tSpeed;
+					}
+					break;
+				case VK_KEY_DOWN:
+					if (isOrtho) {
+						if (tz < OFar)
+							tz += tSpeed;
+					}
+					else {
+						if (tz < PFar)
+							tz += tSpeed;
+					}
+					break;
+				case VK_KEY_LEFT:
+					if (isOrtho) {
+						if (tx > ONear)
+							tx -= tSpeed;
+					}
+					else {
+						if (tx > PNear)
+							tx -= tSpeed;
+					}
+					break;
+				case VK_KEY_RIGHT:
+					if (isOrtho) {
+						if (tx < OFar)
+							tx += tSpeed;
+					}
+					else {
+						if (tx < PFar)
+							tx += tSpeed;
+					}
+					break;
+				case VK_KEY_J:
+					Ptx -= PtSpeed;
+					break;
+				case VK_KEY_L:
+					Ptx += PtSpeed;
+					break;
+				case VK_KEY_I:
+					Pry += PrSpeed;
+					break;
+				case VK_KEY_K:
+					Pry -= PrSpeed;
+					break;
+				case VK_KEY_P:
+					isOrtho = false;
+					tz = PNear;
+					break;
+				case VK_KEY_O:
+					isOrtho = true;
+					break;
+				case VK_KEY_1:
+					gunOn = !gunOn;
+					break;
+				case VK_KEY_2:
+					swordOn = !swordOn;
+					break;
+				default:
+					break;
 			}
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
@@ -185,20 +321,19 @@ void DestroyTexture(GLuint textureArray[])
 	glDisable(GL_TEXTURE_2D);
 }
 
-void Projection()
-{
+void Projection(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glTranslatef(pTx, pTy, 0.0);
-	glRotatef(pRy, 0.0, 1.0, 0.0);
+	glTranslatef(Ptx, Pty, 0.0);
+	glRotatef(Pry, 0.0, 1.0, 0.0);
 
 	if (isOrtho) {
-		glOrtho(-10.0, 10.0, -10.0, 10.0, oNear, oFar);
+		glOrtho(-10.0, 10.0, -10.0, 10.0, ONear, OFar);
 	}
 	else {
-		gluPerspective(20.0, 1.0 /* width / height of screen */, -1.0, 1.0);
-		glFrustum(-10.0, 10.0, -10.0, 10.0, pNear, pFar);
+		gluPerspective(20.0, 1.0 /* width / height of screen */, .0, 1.0);
+		glFrustum(-10.0, 10.0, -10.0, 10.0, PNear, PFar);
 	}
 }
 
@@ -219,7 +354,7 @@ void Lighting()
 	}
 
 	//Light 0 : Red color ambient light at pos(0,1,0) above sphere
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambL);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambM);
 	glLightfv(GL_LIGHT0, GL_POSITION, posA);
 	glEnable(GL_LIGHT0);
 
@@ -982,6 +1117,7 @@ void RobotHead()
 	glRotatef(180,0,1,0);
 	glTranslatef(-0.1,0.5,-0.2);
 	glScalef(0.7,0.7,0.7);
+	//-----------------Cover the whole head transformation-----------------//
 	//	Jaw
 	glPushMatrix();
 	glColor3f(1.0,0.0,0.0);
@@ -1149,8 +1285,394 @@ void RobotHead()
 	glPopMatrix();
 }
 
-void RobotBody1()
+void RobotBody()
 {
+	//-----------------Cover the whole body transformation-----------------//
+	glPushMatrix();
+	// glScalef(4.0, 4.0, 4.0);
+	//-----------------Cover the whole body transformation-----------------//
+	// Body Base
+	glPushMatrix();
+	glColor3f(1.0,0.5,0.5);
+	DrawCube(-0.15, 0.1, -0.10, 0.3, 0.3, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(1.0,0.2,0.5);
+	DrawCube(-0.125, -0.15, -0.10, 0.25, 0.25, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	//	Armor
+	//--------------------Left--------------------//
+	glPushMatrix();
+	glColor3f(0.6,0.1,0.5);
+	glTranslatef(0.5,0,0);
+	glRotatef(-360, 0,1,0);
+	glTranslatef(-0.4,0.4,0);
+	DrawFillPrism(0.1,0.05,0.1);
+	glPopMatrix();
+
+	//--------------------Right--------------------//
+	glPushMatrix();
+	glColor3f(0.6,0.1,0.5);
+	glTranslatef(0.5,0,0);
+	glRotatef(-360, 0,1,0);
+	glTranslatef(-0.6,0.4,0);
+	DrawFillPrism(0.1,0.05,0.1);
+	glPopMatrix();
+	
+	// Chest Area
+	glPushMatrix();
+	//------------------Center Side------------------//
+	//	Upper Part
+	glPushMatrix();
+	glColor3f(0.2,0.1,0.3);
+	glTranslatef(-0.15,0.1,0.1001);
+	glRotatef(90,1,0,0);
+	glTranslatef(0.15,0,-0.25);
+	DrawFillPrism(0.2,0.15, -0.1);
+	glPopMatrix();
+	
+	//	Lower Part
+	glPushMatrix();
+	glColor3f(0.6,0.1,0.3);
+	glTranslatef(-0.15,0.1,0.1001);
+	glRotatef(90,1,0,0);
+	glTranslatef(0.15,0,-0.1);
+	DrawFillPrism(0.2,0.15, 0.2);
+	glPopMatrix();
+
+	//	Waist
+	//	Front
+	glPushMatrix();
+	glColor3f(0.3,0.2,0.2);
+	DrawCube(-0.125, 0, 0.1, 0.05, 0.25, 0.05, GL_QUADS);
+	glPopMatrix();
+
+	//`Left Side
+	glPushMatrix();
+	glColor3f(0.3,0.2,0.2);
+	glRotatef(90, 0,1,0);
+	DrawCube(-0.125, 0, 0.1, 0.05, 0.25, 0.05, GL_QUADS);
+	glPopMatrix();
+
+	//	Back Side
+	glPushMatrix();
+	glColor3f(0.3,0.2,0.2);
+	glRotatef(180, 0,1,0);
+	DrawCube(-0.125, 0, 0.1, 0.05, 0.25, 0.05, GL_QUADS);
+	glPopMatrix();
+
+	//	Right Side
+	glPushMatrix();
+	glColor3f(0.3,0.2,0.2);
+	glRotatef(-90, 0,1,0);
+	DrawCube(-0.125, 0, 0.1, 0.05, 0.25, 0.05, GL_QUADS);
+	glPopMatrix();
+	
+	//	Skirt
+	glPushMatrix();
+	glColor3f(0.6,0.2,0.5);
+	glRotatef(-90,1,0,0);
+	glTranslatef(0, 0.0, -0.2);
+	DrawFillCylinder(0.25, 0.15, 0.15);
+	glPopMatrix();
+
+	//	Pelvis
+	//	Left
+	glPushMatrix();
+	glColor3f(1.0,1.0,1.0);
+	glTranslatef(0.1,-0.15, 0);
+	glRotatef(90,1,0,0);
+	glRotatef(90,0,1,0);
+	glRotatef(90,0,0,1);
+	DrawFillPrism(0.2,0.05, 0.15);
+	glPopMatrix();
+
+	//	Left
+	glPushMatrix();
+	glColor3f(1.0,1.0,1.0);
+	glTranslatef(-0.1,-0.15, 0);
+	glRotatef(90,1,0,0);
+	glRotatef(90,0,1,0);
+	glRotatef(90,0,0,1);
+	DrawFillPrism(0.2,0.05, -0.15);
+	glPopMatrix();
+	
+	//-----------------Cover the whole body transformation-----------------//
+	glPopMatrix();
+}
+
+void RobotArm(){
+	//-----------------Cover the whole arm transformation-----------------//
+	glPushMatrix();
+	// glScalef(4.0, 4.0, 4.0);
+	//-----------------Cover the whole arm transformation-----------------//
+	//------------------Left------------------//
+	//	Upper Armor
+	glPushMatrix();
+	glColor3f(0.1,0.1,0.5);
+	glTranslatef(0.5,0,0);
+	glRotatef(-90, 0,1,0);
+	glTranslatef(0,0.4,0.2);
+	DrawFillPrism(0.15,0.15,0.3);
+	glPopMatrix();
+	
+	//	Shoulder
+	glPushMatrix();
+	glColor3f(0.2,0.2,0.5);
+	glTranslatef(0.5,0,0);
+	glRotatef(-90, 0,1,0);
+	glTranslatef(0,0.4,0.2);
+	DrawFillPrism(-0.15,-0.15,-0.3);
+	glPopMatrix();
+
+	//-----------------Cover the left arm transformation-----------------//
+	glPushMatrix();
+	//-----------------Cover the left arm transformation-----------------//
+	//	Arm Upper
+	glPushMatrix();
+	glColor3f(0.5,0.5,0);
+	DrawCube(0.2, 0.09, -0.05, 0.3, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+
+	//	Arm Center
+	glPushMatrix();
+	glColor3f(0.1,0.1,0);
+	DrawCube(0.2, -0.01, -0.05, 0.1, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+
+	//	Arm Bottom
+	glPushMatrix();
+	glColor3f(0.2,0.5,0);
+	DrawCube(0.2, -0.21, -0.05, 0.2, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+	//	Left Side
+	glPushMatrix();
+	glColor3f(0.1,0.2,0.5);
+	glTranslatef(0.312, -0.21, 0);
+	glRotatef(90,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	//	Back Side
+	glPushMatrix();
+	glColor3f(0.1,0.2,0.2);
+	glTranslatef(0.25, -0.21, -0.07);
+	glRotatef(-180,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	//	Front Side
+	glPushMatrix();
+	glColor3f(0.1,0.5,0.8);
+	glTranslatef(0.25, -0.21, 0.07);
+	glRotatef(-360,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	//	Right Side
+	glPushMatrix();
+	glColor3f(1.0,1.0,0.5);
+	glTranslatef(0.185, -0.21, 0);
+	glRotatef(-90,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+
+	//	Hands
+	
+	
+	//-----------------Cover the left arm transformation-----------------//
+	glPopMatrix();
+	
+	//------------------Right------------------//
+	//	Upper Armor
+	glPushMatrix();
+	glColor3f(0.1,0.1,0.5);
+	glTranslatef(0.5,0,0);
+	glRotatef(90, 0,1,0);
+	glTranslatef(0,0.4,-0.8);
+	DrawFillPrism(0.15,0.15,0.3);
+	glPopMatrix();
+	
+	//	Shoulder
+	glPushMatrix();
+	glColor3f(0.2,0.2,0.5);
+	glTranslatef(0.5,0,0);
+	glRotatef(90, 0,1,0);
+	glTranslatef(0,0.4,-0.8);
+	DrawFillPrism(-0.15,-0.15,-0.3);
+	glPopMatrix();
+
+	//	Arm Upper
+	glPushMatrix();
+	glColor3f(0.5,0.5,0);
+	DrawCube(-0.3, 0.09, -0.05, 0.3, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+
+	//	Arm Center
+	glPushMatrix();
+	glColor3f(0.1,0.1,0);
+	DrawCube(-0.3, -0.01, -0.05, 0.1, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+
+	//	Arm Bottom
+	glPushMatrix();
+	glColor3f(0.2,0.5,0);
+	DrawCube(-0.3, -0.21, -0.05, 0.2, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+	//	Right Side
+	glPushMatrix();
+	glColor3f(0.1,0.2,0.5);
+	glTranslatef(-0.312, -0.21, 0);
+	glRotatef(-90,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	//	Back Side
+	glPushMatrix();
+	glColor3f(0.1,0.2,0.2);
+	glTranslatef(-0.25, -0.21, -0.07);
+	glRotatef(-180,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	//	Front Side
+	glPushMatrix();
+	glColor3f(0.1,0.5,0.8);
+	glTranslatef(-0.25, -0.21, 0.07);
+	glRotatef(-360,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	//	Left Side
+	glPushMatrix();
+	glColor3f(1.0,1.0,0.5);
+	glTranslatef(-0.185, -0.21, 0);
+	glRotatef(90,0,1,0);
+	DrawFillPrism(0.1,0.2,0.025);
+	glPopMatrix();
+	
+	//-----------------Cover the whole arm transformation-----------------//
+	glPopMatrix();
+}
+
+void RobotLeg(){
+	//-----------------Cover the whole leg transformation-----------------//
+	glPushMatrix();
+	// glScalef(4.0, 4.0, 4.0);
+	//-----------------Cover the whole leg transformation-----------------//
+	//------------------Left Leg------------------//
+	//	Thigh
+	glPushMatrix();
+	glColor3f(1.0,0.5,0.5);
+	DrawCube(0.05, -0.35, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
+	glPopMatrix();
+	
+	//	Left Side
+	glPushMatrix();
+	glColor3f(0.9,0.1,0.5);
+	glTranslatef(0.165, -0.15, 0);
+	glRotatef(90,0,1,0);
+	glRotatef(-180,1,0,0);
+	DrawFillPrism(0.2,0.2,-0.02);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.9,0.1,0.5);
+	glTranslatef(0.04, -0.15, 0);
+	glRotatef(-90,0,1,0);
+	glRotatef(-180,1,0,0);
+	DrawFillPrism(0.2,0.2,-0.02);
+	glPopMatrix();
+	
+	//	Knee
+	glPushMatrix();
+	glColor3f(1.0,0.8,0.5);
+	DrawCube(0.05, -0.55, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	//	Ankle
+	glPushMatrix();
+	glColor3f(0.8,0.5,0.5);
+	DrawCube(0.05, -0.85, -0.10, 0.3, 0.1, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	//	Left Side
+	glPushMatrix();
+	glColor3f(0.9,0.1,0.5);
+	glTranslatef(0.175, -0.85, 0);
+	glRotatef(90,0,1,0);
+	DrawFillPrism(0.2,0.3,0.05);
+	glPopMatrix();
+
+	//	Feet
+	glPushMatrix();
+	glColor3f(0.3,0.5,0.5);
+	DrawCube(0.05, -0.85, 0.10, 0.05, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.1,0.1,0.5);
+	glTranslatef(0.1, -0.8, 0.15);
+	DrawFillPrism(0.1,0.1,0.1);
+	glPopMatrix();
+	
+	//------------------Right Leg------------------//
+	//	Thigh
+	glPushMatrix();
+	glColor3f(1.0,0.5,0.5);
+	DrawCube(-0.15, -0.35, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	//	Right Side
+	glPushMatrix();
+	glColor3f(0.9,0.1,0.5);
+	glTranslatef(-0.165, -0.15, 0);
+	glRotatef(-90,0,1,0);
+	glRotatef(-180,1,0,0);
+	DrawFillPrism(0.2,0.2,-0.02);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.9,0.1,0.5);
+	glTranslatef(-0.04, -0.15, 0);
+	glRotatef(90,0,1,0);
+	glRotatef(-180,1,0,0);
+	DrawFillPrism(0.2,0.2,-0.02);
+	glPopMatrix();
+
+	//	Knee
+	glPushMatrix();
+	glColor3f(1.0,0.8,0.5);
+	DrawCube(-0.15, -0.55, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	//	Ankle
+	glPushMatrix();
+	glColor3f(0.8,0.5,0.5);
+	DrawCube(-0.15, -0.85, -0.10, 0.3, 0.1, 0.2, GL_QUADS);
+	glPopMatrix();
+
+	//	Right Side
+	glPushMatrix();
+	glColor3f(0.9,0.1,0.5);
+	glTranslatef(-0.175, -0.85, 0);
+	glRotatef(-90,0,1,0);
+	DrawFillPrism(0.2,0.3,0.05);
+	glPopMatrix();
+
+	//	Feet
+	glPushMatrix();
+	glColor3f(0.3,0.5,0.5);
+	DrawCube(-0.15, -0.85, 0.10, 0.05, 0.1, 0.1, GL_QUADS);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.1,0.1,0.5);
+	glTranslatef(-0.1, -0.8, 0.15);
+	DrawFillPrism(0.1,0.1,0.1);
+	glPopMatrix();
+	//-----------------Cover the whole body transformation-----------------//
+	glPopMatrix();
+}
+
+//	EX & XT Version
+void RobotBody1(){
 	//-----------------Cover the whole body transformation-----------------//
 	glPushMatrix();
 	glTranslatef(-0.1,0.5,0);
@@ -1294,58 +1816,6 @@ void RobotBody1()
 	//-----------------Cover the whole body transformation-----------------//
 	glPopMatrix();
 }
-
-void RobotBody()
-{
-	//-----------------Cover the whole body transformation-----------------//
-	glPushMatrix();
-	// glTranslatef(-0.1,0.5,0);
-	// glScalef(0.1, 0.1, 0.1);
-	// glTranslatef(1, -6, 0);
-	//-----------------Cover the whole body transformation-----------------//
-	// Body Base
-	glPushMatrix();
-	glColor3f(1.0,0.5,0.5);
-	DrawCube(-0.15, 0.1, -0.10, 0.3, 0.3, 0.2, GL_QUADS);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(1.0,0.2,0.5);
-	DrawCube(-0.125, -0.15, -0.10, 0.25, 0.25, 0.2, GL_QUADS);
-	glPopMatrix();
-	
-	// Chest Area
-	glPushMatrix();
-	//------------------Left Side------------------//
-	glPushMatrix();
-	glColor3f(1.0,0.1,0.3);
-	glTranslatef(-0.15,0.1,0.1001);
-	glRotatef(90,1,0,0);
-	glTranslatef(0,0,-0.3);
-	DrawFillPyramid(0.3,0.15);
-	glPopMatrix();
-	
-	//	Skirt
-	glPushMatrix();
-	glColor3f(0.6,0.2,0.5);
-	glRotatef(-90,1,0,0);
-	glTranslatef(0, 0.0, -0.2);
-	DrawFillCylinder(0.25, 0.15, 0.15);
-	glPopMatrix();
-
-	//	Hips
-	// glPushMatrix();
-	// glColor3f(1.0,1.0,1.0);
-	// glTranslatef(-0.15,0.1,0.1001);
-	// glRotatef(-180,1,0,0);
-	// glTranslatef(0.0,0.25,0);
-	// DrawFillPyramid(0.15,0.1);
-	// glPopMatrix();
-	
-	//-----------------Cover the whole body transformation-----------------//
-	glPopMatrix();
-}
-
 void RobotArm1()
 {
 	//------------------Left Hand------------------//
@@ -1435,73 +1905,7 @@ void RobotArm1()
 	DrawFullSquare(0.05, 0.05, 0.2, 0.2);
 	glPopMatrix();
 }
-
-void RobotArm()
-{
-	glPushMatrix();
-
-	//------------------Left------------------//
-	//	Shoulder
-	glPushMatrix();
-	glColor3f(0.2,0.2,0.5);
-	glTranslatef(0.5,0,0);
-	glRotatef(-90, 0,1,0);
-	glTranslatef(0,0.4,0.2);
-	DrawFillPrism(-0.15,-0.15,-0.3);
-	glPopMatrix();
-
-	//	Arm Upper
-	glPushMatrix();
-	glColor3f(0.5,0.5,0);
-	DrawCube(0.2, 0.09, -0.05, 0.3, 0.1, 0.1, GL_QUADS);
-	glPopMatrix();
-
-	//	Arm Center
-	glPushMatrix();
-	glColor3f(0.1,0.1,0);
-	DrawCube(0.2, -0.01, -0.05, 0.1, 0.1, 0.1, GL_QUADS);
-	glPopMatrix();
-
-	//	Arm Bottom
-	glPushMatrix();
-	glColor3f(0.2,0.5,0);
-	DrawCube(0.2, -0.21, -0.05, 0.2, 0.1, 0.1, GL_QUADS);
-	glPopMatrix();
-	
-	//------------------Right------------------//
-	//	Shoulder
-	glPushMatrix();
-	glColor3f(0.2,0.2,0.5);
-	glTranslatef(0.5,0,0);
-	glRotatef(90, 0,1,0);
-	glTranslatef(0,0.4,-0.8);
-	DrawFillPrism(-0.15,-0.15,-0.3);
-	glPopMatrix();
-
-	//	Arm Upper
-	glPushMatrix();
-	glColor3f(0.5,0.5,0);
-	DrawCube(-0.3, 0.09, -0.05, 0.3, 0.1, 0.1, GL_QUADS);
-	glPopMatrix();
-
-	//	Arm Center
-	glPushMatrix();
-	glColor3f(0.1,0.1,0);
-	DrawCube(-0.3, -0.01, -0.05, 0.1, 0.1, 0.1, GL_QUADS);
-	glPopMatrix();
-
-	//	Arm Bottom
-	glPushMatrix();
-	glColor3f(0.2,0.5,0);
-	DrawCube(-0.3, -0.21, -0.05, 0.2, 0.1, 0.1, GL_QUADS);
-	glPopMatrix();
-	
-	//-----------------Cover the whole body transformation-----------------//
-	glPopMatrix();
-}
-
-void RobotLeg1()
-{
+void RobotLeg1(){
 	//------------------Left Feet------------------//
 	glPushMatrix();
 	glTranslatef(-0.3, 0.05, 0.25);
@@ -1768,41 +2172,6 @@ void RobotLeg1()
 	glPopMatrix();
 }
 
-void RobotLeg()
-{
-	//------------------Left Leg------------------//
-	glPushMatrix();
-	glColor3f(1.0,0.5,0.5);
-	DrawCube(0.05, -0.35, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(1.0,0.8,0.5);
-	DrawCube(0.05, -0.55, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(0.8,0.5,0.5);
-	DrawCube(0.05, -0.85, -0.10, 0.3, 0.1, 0.2, GL_QUADS);
-	glPopMatrix();
-	
-	//------------------Right Leg------------------//
-	glPushMatrix();
-	glColor3f(1.0,0.5,0.5);
-	DrawCube(-0.15, -0.35, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(1.0,0.8,0.5);
-	DrawCube(-0.15, -0.55, -0.10, 0.2, 0.1, 0.2, GL_QUADS);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(0.8,0.5,0.5);
-	DrawCube(-0.15, -0.85, -0.10, 0.3, 0.1, 0.2, GL_QUADS);
-	glPopMatrix();
-}
-
 // TBA : Other stuff like weapons, etc.
 //	Weapon: Loudspeaker
 void LoudSpeaker()
@@ -1817,7 +2186,7 @@ void LoudSpeaker()
 	glColor3f(0.0,0.3,1.0);
 	DrawFillCylinder(0.1,0.3,0.5);
 	glPopMatrix();
-
+	
 	//	Inner
 	glPushMatrix();
 	glColor3f(1.0,0.3,1.0);
@@ -1860,7 +2229,6 @@ void LoudSpeaker()
 	//-----------------Cover the whole loudspeaker transformation-----------------//
 	glPopMatrix();
 }
-
 //	Weapon: Green Onions
 void OnionSword()
 {
@@ -1911,7 +2279,18 @@ void OnionSword()
 	//-----------------Cover the whole onion sword transformation-----------------//
 	glPopMatrix();
 }
-
+//	Weapon Trigger
+void WeaponTrigger()
+{
+	if(gunOn)
+	{
+		LoudSpeaker();
+	}
+	else if(swordOn)
+	{
+		OnionSword();
+	}
+}
 /*
  * --------------------------------------------------------------------
  *								Robot
@@ -1925,19 +2304,18 @@ void Display()
 	glEnable(GL_DEPTH_TEST);
 
 	referenceLine();
-	Lighting();
-	Projection();
 
 	//	Transformation
 	glRotatef(rSpeed, rx, ry,rz);
-	
 	// Draw Robot Here
+
+	
 	RobotHead();
+	
 	RobotBody();
 	RobotArm();
 	RobotLeg();
-	// LoudSpeaker();
-	// OnionSword();
+	WeaponTrigger();
 }
 
 /*
@@ -1996,7 +2374,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
+		Lighting();
+		// Projection();
 		Display();
 
 		SwapBuffers(hdc);
